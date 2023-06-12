@@ -29,13 +29,10 @@ def create_user():
     # Convert the bytes into a PIL image
     image = Image.open(io.BytesIO(binary_data))
 
-    ############################## Run AI
-
     inputs = processor(images=image, return_tensors="pt")
     outputs = model(**inputs)
 
     # convert outputs (bounding boxes and class logits) to COCO API
-    # let's only keep detections with score > 0.9
     target_sizes = torch.tensor([image.size[::-1]])
     results = processor.post_process_object_detection(outputs, target_sizes=target_sizes, threshold=threshold)[0]
 
@@ -63,9 +60,6 @@ def create_user():
         count += 1
 
     print("Total objects detected: ", count)
-
-    ############################## End AI
-
     
     # Return the response, in JSON format with all the objects
 
